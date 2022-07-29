@@ -21,31 +21,44 @@ class AnalysisTest {
   @ParameterizedTest
   @ValueSource(ints = {3, 21, 999_999_999})
   void analyze_fizz(int value) {
-    assertEquals(expectedFizz, analysis.analyze(value));;
+    assertEquals(expectedFizz, analysis.analyze(value));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {0, 15, 999_999_990})
   void analyze_fizzBuzz(int value) {
-    assertEquals(expectedFizzBuzz, analysis.analyze(value));;
+    assertEquals(expectedFizzBuzz, analysis.analyze(value));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {5, 999_999_995})
   void analyze_Buzz(int value) {
-    assertEquals(expectedBuzz, analysis.analyze(value));;
+    assertEquals(expectedBuzz, analysis.analyze(value));
   }
 
   @ParameterizedTest
   @CsvFileSource(resources = "neither.csv")
   void analyze_neither(int value) {
-    assertEquals(expectedNeither, analysis.analyze(value));;
+    assertEquals(expectedNeither, analysis.analyze(value));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {-1, -3, -5, -15})
   void analyze_negative(int value){
-    assertThrows(IllegalArgumentException.class, new InvalidInvocation(analysis, value));
+    assertThrows(IllegalArgumentException.class, new InvalidInvocation(value));
   }
 
+  class InvalidInvocation implements Executable {
+
+    private final int value;
+
+    public InvalidInvocation(int value) {
+      this.value = value;
+    }
+
+    @Override
+    public void execute() throws Throwable {
+      analysis.analyze(value);
+    }
+  }
 }
